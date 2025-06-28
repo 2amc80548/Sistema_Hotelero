@@ -6,16 +6,16 @@ use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-
-
 class ClienteController extends Controller
 {
     public function index()
     {
         $clientes = Cliente::latest()->get();
-        return Inertia::render('Clientes/Index', compact('clientes'));
+        return Inertia::render('Clientes/Index', compact('clientes'));    
     }
 
+    
+     
     public function create()
     {
         return Inertia::render('Clientes/Create');
@@ -66,7 +66,9 @@ class ClienteController extends Controller
 
 
     public function show(Cliente $cliente)
-{
+{   
+    
+    $cliente->load('reservas.habitacion');
     return Inertia::render('Clientes/Show', [
         'cliente' => $cliente
     ]);

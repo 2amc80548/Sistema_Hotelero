@@ -43,7 +43,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+use App\Http\Controllers\FacturaController;
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/facturas', [FacturaController::class, 'index'])->name('facturas.index');
+    Route::get('/facturas/{factura}', [FacturaController::class, 'show'])->name('facturas.show');
+    Route::get('/facturas/{factura}/pdf', [FacturaController::class, 'descargarPDF'])->name('facturas.pdf');
+});
 
 
 

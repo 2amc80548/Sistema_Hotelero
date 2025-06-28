@@ -31,5 +31,10 @@ class Reserva extends Model
     return $this->belongsTo(Cliente::class);
 }
 
+public function factura()
+{
+    return $this->hasOne(Factura::class);
+}
+
 
 }

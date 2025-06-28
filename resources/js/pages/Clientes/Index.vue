@@ -31,8 +31,8 @@ const eliminar = (id) => {
 
 <template>
   <AppLayout>
-    <div class="p-6">
-      <h1 class="text-2xl font-bold mb-4">Clientes</h1>
+    <div class="p-1">
+      <h1 class="text-2xl font-bold mb-2">Clientes</h1>
       <input v-model="search" placeholder="Buscar cliente..." class="mb-4 px-3 py-2 border rounded w-full" />
       <Alert v-if="flashMessage" :message="flashMessage" />
      <div class="mb-4">
@@ -42,7 +42,7 @@ const eliminar = (id) => {
      </div>
 
     
-    <table class="min-w-full divide-y divide-gray-200 text-sm">
+     <table class="min-w-full divide-y divide-gray-200 text-sm">
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left font-medium text-gray-700">Nombre</th>
@@ -68,7 +68,9 @@ const eliminar = (id) => {
           <td colspan="5" class="text-center py-4 text-gray-500">No se encontraron clientes.</td>
         </tr>
       </tbody>
+   
      </table>
+   
      </div>
     
   </AppLayout>
