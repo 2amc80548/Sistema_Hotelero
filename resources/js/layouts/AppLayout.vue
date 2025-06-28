@@ -98,7 +98,7 @@
         </div>
         
         <nav class="space-y-1">
-          <button @click="visit('/')" class="nav-menu-item" :class="{ 'nav-menu-item-active': $page.url === '/' }">
+          <button @click="visit('/dashboard')" class="nav-menu-item" :class="{ 'nav-menu-item-active': $page.url === '/' }">
             <span class="nav-menu-icon">📊</span>
             <span>Dashboard</span>
             <span class="nav-menu-arrow">→</span>

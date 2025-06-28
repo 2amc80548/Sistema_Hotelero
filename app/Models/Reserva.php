@@ -31,9 +31,11 @@ class Reserva extends Model
     return $this->belongsTo(Cliente::class);
 }
 
-public function factura()
+
+public function calcularTotal()
 {
-    return $this->hasOne(Factura::class);
+    $dias = $this->fecha_ingreso->diffInDays($this->fecha_salida);
+    return $this->habitacion->precio * $dias;
 }
 
 

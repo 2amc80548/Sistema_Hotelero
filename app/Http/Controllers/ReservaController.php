@@ -34,6 +34,7 @@ class ReservaController extends Controller
     return Inertia::render('Reservas/Create', [
         'habitaciones' => $habitaciones->where('estado', 'disponible'),
         'clientes' => $clientes, // 
+ 
     ]);
 
 }

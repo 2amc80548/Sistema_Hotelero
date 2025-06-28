@@ -11,45 +11,61 @@ use Illuminate\Support\Facades\DB;
 
 class ReporteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Reservas por mes
-        $reservasPorMes = Reserva::selectRaw("DATE_FORMAT(fecha_ingreso, '%Y-%m') as mes, COUNT(*) as total")
-            ->groupBy('mes')
-            ->orderBy('mes')
+        // Validar fechas
+        $request->validate([
+            'fecha_inicio' => 'nullable|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+        ]);
+
+        $fechaInicio = $request->fecha_inicio ?? now()->subMonth()->format('Y-m-d');
+        $fechaFin = $request->fecha_fin ?? now()->format('Y-m-d');
+
+        // Reporte de reservas
+        $reservas = Reserva::with(['cliente', 'habitacion'])
+            ->when($fechaInicio && $fechaFin, function ($query) use ($fechaInicio, $fechaFin) {
+                $query->whereBetween('fecha_ingreso', [$fechaInicio, $fechaFin]);
+            })
+            ->orderBy('fecha_ingreso', 'desc')
             ->get();
 
-        // Ingresos por mes
-        $ingresosPorMes = Reserva::selectRaw("DATE_FORMAT(fecha_ingreso, '%Y-%m') as mes, SUM(total) as ingresos")
-            ->groupBy('mes')
-            ->orderBy('mes')
-            ->get();
+        // Totales
+        $totalIngresos = $reservas->sum('total');
+        $totalReservas = $reservas->count();
 
-        // Clientes frecuentes
+        // Clientes frecuentes en el periodo
         $clientesFrecuentes = Cliente::select('clientes.id', 'clientes.nombre', DB::raw('COUNT(reservas.id) as total_reservas'))
             ->join('reservas', 'clientes.id', '=', 'reservas.cliente_id')
+            ->when($fechaInicio && $fechaFin, function ($query) use ($fechaInicio, $fechaFin) {
+                $query->whereBetween('reservas.fecha_ingreso', [$fechaInicio, $fechaFin]);
+            })
             ->groupBy('clientes.id', 'clientes.nombre')
             ->orderByDesc('total_reservas')
             ->limit(5)
             ->get();
 
-        // Habitaciones más ocupadas
-        $habitacionesOcupadas = Habitacion::select('habitaciones.numero', DB::raw('COUNT(reservas.id) as veces_ocupada'))
+        // Habitaciones más ocupadas en el periodo
+        $habitacionesOcupadas = Habitacion::select('habitaciones.id', 'habitaciones.numero', 'habitaciones.tipo', DB::raw('COUNT(reservas.id) as veces_ocupada'))
             ->join('reservas', 'habitaciones.id', '=', 'reservas.habitacion_id')
-            ->groupBy('habitaciones.id', 'habitaciones.numero')
+            ->when($fechaInicio && $fechaFin, function ($query) use ($fechaInicio, $fechaFin) {
+                $query->whereBetween('reservas.fecha_ingreso', [$fechaInicio, $fechaFin]);
+            })
+            ->groupBy('habitaciones.id', 'habitaciones.numero', 'habitaciones.tipo')
             ->orderByDesc('veces_ocupada')
             ->limit(5)
             ->get();
 
-        // Inventario bajo stock
-        $productosBajoStock = Inventario::whereColumn('cantidad', '<=', 'stock_minimo')->get();
-
         return Inertia::render('Reportes/Index', [
-            'reservasPorMes' => $reservasPorMes,
-            'ingresosPorMes' => $ingresosPorMes,
+            'reservas' => $reservas,
+            'totalIngresos' => $totalIngresos,
+            'totalReservas' => $totalReservas,
             'clientesFrecuentes' => $clientesFrecuentes,
             'habitacionesOcupadas' => $habitacionesOcupadas,
-            'productosBajoStock' => $productosBajoStock,
+            'filtros' => [
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $fechaFin
+            ]
         ]);
     }
 }
