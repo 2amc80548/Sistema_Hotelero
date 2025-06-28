@@ -17,6 +17,10 @@ const eliminar = (id) => {
     router.delete(`/reservas/${id}`)
   }
 }
+
+
+
+
 </script>
 
 <template>
@@ -89,6 +93,15 @@ const eliminar = (id) => {
              class="text-green-400 hover:underline">
                Detalles
              </button>
+
+               <button
+              @click="finalizarReserva(reserva.id)"
+              class="text-green-600 hover:underline mr-2"
+              v-if="reserva.estado !== 'finalizada'"
+            >
+              Finalizar
+            </button>
+
            </td>
          </tr>
          <tr v-if="!reservas.length">

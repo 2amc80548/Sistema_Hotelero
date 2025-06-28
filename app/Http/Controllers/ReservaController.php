@@ -7,6 +7,8 @@ use App\Models\Habitacion;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Cliente;
+use App\Models\Factura;
+use Carbon\Carbon;
 
 
 class ReservaController extends Controller
@@ -109,4 +111,5 @@ class ReservaController extends Controller
         'reserva' => $reserva,
     ]);
 }
+
 }

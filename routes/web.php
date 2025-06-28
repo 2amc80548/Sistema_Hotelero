@@ -3,11 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
+// Route::get('dash', function () {
+//     return Inertia::render('Welcome');
+// })->name('home');
 
-Route::get('dashboard', function () {
+Route::get('/', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -42,13 +42,22 @@ Route::middleware(['auth'])->group(function () {
     ]);
 });
 
-
-use App\Http\Controllers\FacturaController;
+use App\Http\Controllers\InventarioController;
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/facturas', [FacturaController::class, 'index'])->name('facturas.index');
-    Route::get('/facturas/{factura}', [FacturaController::class, 'show'])->name('facturas.show');
-    Route::get('/facturas/{factura}/pdf', [FacturaController::class, 'descargarPDF'])->name('facturas.pdf');
+    Route::resource('inventario', InventarioController::class)->parameters([
+        'inventario' => 'inventario'  // singular 'cliente' para el parámetro en controlador
+
+   ]);
+});
+
+use App\Http\Controllers\ReporteController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('reportes', ReporteController::class)->parameters([
+        'reportes' => 'reporte'
+        
+    ]);
 });
 
 
