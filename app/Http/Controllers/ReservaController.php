@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reserva;
-use App\Models\Habitacion;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Cliente;
-use App\Models\Factura;
-use Carbon\Carbon;
+use App\Models\Habitacion;
+
+
 
 
 class ReservaController extends Controller
@@ -25,7 +25,7 @@ class ReservaController extends Controller
 
 
 
-    // Mostrar formulario para crear reserva
+  
     public function create()
     {
         $habitaciones = Habitacion::all();
@@ -34,13 +34,12 @@ class ReservaController extends Controller
     return Inertia::render('Reservas/Create', [
         'habitaciones' => $habitaciones->where('estado', 'disponible'),
         'clientes' => $clientes, // 
- 
+        
     ]);
 
 }
    
 
-    // Guardar nueva reserva
     public function store(Request $request)
     {
         $request->validate([

@@ -3,14 +3,14 @@ defineProps({
   form: Object,
   habitaciones: Array,
   clientes: Array,
-  // Etiqueta del botón de envío
+
 
   submitLabel: {
     type: String,
     default: 'Guardar'
   }
 })
-  
+ 
 
 </script>
 
