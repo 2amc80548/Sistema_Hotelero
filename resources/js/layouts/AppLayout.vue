@@ -173,8 +173,8 @@ const userMenuOpen = ref(false)
 
 // Datos de usuario simulados
 const user = {
-  name: 'Alex Rivera',
-  email: 'alex@hotelharmony.com'
+  name: 'ADMINISTRADOR',
+  email: 'admin@admin.com'
 }
 
 const userName = computed(() => user.name)

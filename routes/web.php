@@ -9,8 +9,8 @@ use Inertia\Inertia;
   
   
 
-       Route::get('/dashboard', function () {
-       return Inertia::render('Dashboard');
+       Route::get('/', function () {
+       return Inertia::render('dashboard');
       })->middleware(['auth', 'verified'])->name('dashboard');
 
  require __DIR__.'/settings.php';
